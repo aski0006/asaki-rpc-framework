@@ -22,6 +22,7 @@ public class RpcRequest implements Serializable {
     private Class<?>[] parameterTypes;
     private Object[] parameters;
 
+    public RpcRequest() {}
     /**
      * 构造函数，用于初始化 RpcRequest 对象。
      *
