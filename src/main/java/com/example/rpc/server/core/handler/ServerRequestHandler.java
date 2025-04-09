@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
  *     <li><strong>处理 RPC 请求</strong>: 从请求中提取服务名称、方法名称和参数，调用相应的方法，并返回结果。</li>
  *     <li><strong>异常处理</strong>: 捕获并处理在处理请求过程中发生的异常，将异常信息返回给客户端。</li>
  * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class ServerRequestHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
@@ -32,14 +35,19 @@ public class ServerRequestHandler extends SimpleChannelInboundHandler<RpcRequest
         response.setRequestId(request.getRequestId());
 
         try {
+            System.out.println("Received request: " + request);
             Object service = ServiceRegistry.getService(request.getServiceName());
+            System.out.println("Service found: " + service);
             Method method = service.getClass().getMethod(
                     request.getMethodName(),
                     request.getParameterTypes()
             );
+            System.out.println("Method found: " + method);
             Object result = method.invoke(service, request.getParameters());
+            System.out.println("Method executed, result: " + result);
             response.setResult(result);
         } catch (Exception e) {
+            System.out.println("Exception occurred: " + e);
             response.setException(e);
         }
 

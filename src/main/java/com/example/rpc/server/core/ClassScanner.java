@@ -11,6 +11,9 @@ import java.util.List;
 /**
  * <p>ClassScanner 是一个用于扫描指定包下带有特定注解的类的工具类。</p>
  * <p>该类提供了静态方法 `scan`，用于扫描指定包路径下所有带有指定注解的类，并返回这些类的列表。</p>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class ClassScanner {
 

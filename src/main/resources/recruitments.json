@@ -1,0 +1,144 @@
+{
+  "recruitments": [
+    {
+      "companyName": "未来科技有限公司",
+      "position": "Java开发工程师",
+      "location": "北京",
+      "salaryRange": "15-30k",
+      "requirements": {
+        "experience": "3年以上Java开发经验",
+        "education": "本科及以上学历",
+        "skills": ["Spring Boot", "MySQL", "Redis", "分布式系统设计"],
+        "additional": "有高并发项目经验者优先"
+      },
+      "benefits": ["五险一金", "年终奖", "弹性工作制", "技术培训"],
+      "postDate": "2023-08-15"
+    },
+    {
+      "companyName": "星海教育集团",
+      "position": "课程顾问",
+      "location": "上海",
+      "salaryRange": "8-15k + 提成",
+      "requirements": {
+        "experience": "1年以上教育行业销售经验",
+        "education": "大专及以上学历",
+        "skills": ["客户沟通", "需求分析", "办公软件"],
+        "additional": "英语流利者优先"
+      },
+      "benefits": ["带薪培训", "年度旅游", "节日福利"],
+      "postDate": "2023-08-14"
+    },
+    {
+      "companyName": "蓝鲸电商",
+      "position": "数据分析师",
+      "location": "杭州",
+      "salaryRange": "20-40k",
+      "requirements": {
+        "experience": "2年以上数据分析经验",
+        "education": "统计学/计算机相关专业硕士",
+        "skills": ["Python", "SQL", "Tableau", "机器学习基础"],
+        "additional": "熟悉电商业务指标体系"
+      },
+      "benefits": ["股权激励", "免费三餐", "健身房"],
+      "postDate": "2023-08-13"
+    },
+    {
+      "companyName": "平安医疗",
+      "position": "护士长",
+      "location": "广州",
+      "salaryRange": "12-18k",
+      "requirements": {
+        "experience": "5年以上三甲医院护理经验",
+        "education": "护理专业本科",
+        "skills": ["护理管理", "急救技能", "医疗文书"],
+        "additional": "持有护士执业资格证书"
+      },
+      "benefits": ["补充医疗保险", "年度体检", "带薪年假"],
+      "postDate": "2023-08-12"
+    },
+    {
+      "companyName": "极速物流",
+      "position": "仓储经理",
+      "location": "成都",
+      "salaryRange": "10-20k",
+      "requirements": {
+        "experience": "3年以上物流仓储管理经验",
+        "education": "不限",
+        "skills": ["WMS系统", "库存管理", "团队管理"],
+        "additional": "熟悉自动化仓储设备优先"
+      },
+      "benefits": ["绩效奖金", "交通补贴", "包住宿"],
+      "postDate": "2023-08-11"
+    },
+    {
+      "companyName": "创意无限广告",
+      "position": "平面设计师",
+      "location": "深圳",
+      "salaryRange": "8-15k",
+      "requirements": {
+        "experience": "1年以上设计经验",
+        "education": "艺术设计相关专业",
+        "skills": ["Photoshop", "Illustrator", "品牌视觉设计"],
+        "additional": "附作品集"
+      },
+      "benefits": ["弹性打卡", "创意下午茶", "年度旅游"],
+      "postDate": "2023-08-10"
+    },
+    {
+      "companyName": "环球律师事务所",
+      "position": "执业律师",
+      "location": "上海",
+      "salaryRange": "25-50k",
+      "requirements": {
+        "experience": "通过司法考试，5年以上民商法经验",
+        "education": "法律专业硕士",
+        "skills": ["法律文书", "庭审应对", "商务谈判"],
+        "additional": "有涉外案件经验优先"
+      },
+      "benefits": ["案件提成", "专业培训", "带薪假期"],
+      "postDate": "2023-08-09"
+    },
+    {
+      "companyName": "绿城物业",
+      "position": "物业主管",
+      "location": "南京",
+      "salaryRange": "7-12k",
+      "requirements": {
+        "experience": "2年以上物业管理经验",
+        "education": "大专及以上",
+        "skills": ["客户服务", "应急处理", "物业管理条例"],
+        "additional": "持物业经理上岗证"
+      },
+      "benefits": ["节日礼金", "员工公寓", "晋升通道"],
+      "postDate": "2023-08-08"
+    },
+    {
+      "companyName": "智联研究院",
+      "position": "AI算法工程师",
+      "location": "北京",
+      "salaryRange": "30-60k",
+      "requirements": {
+        "experience": "3年以上深度学习研发经验",
+        "education": "计算机/数学博士",
+        "skills": ["TensorFlow", "PyTorch", "NLP/CV方向"],
+        "additional": "顶会论文发表者优先"
+      },
+      "benefits": ["科研经费", "弹性工作制", "人才公寓"],
+      "postDate": "2023-08-07"
+    },
+    {
+      "companyName": "美味餐饮连锁",
+      "position": "店长",
+      "location": "武汉",
+      "salaryRange": "10-18k + 分红",
+      "requirements": {
+        "experience": "3年以上餐饮管理经验",
+        "education": "高中及以上",
+        "skills": ["成本控制", "员工培训", "食品安全"],
+        "additional": "有连锁门店运营经验"
+      },
+      "benefits": ["绩效奖金", "员工餐补", "晋升空间"],
+      "postDate": "2023-08-06"
+    }
+  ]
+}

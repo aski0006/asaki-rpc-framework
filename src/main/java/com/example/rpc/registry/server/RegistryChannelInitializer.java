@@ -4,7 +4,8 @@ import com.example.rpc.registry.handler.RegistryRequestHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
 
 /**
  * <p>RegistryChannelInitializer 类的主要作用是对 SocketChannel 的管道进行初始化操作，
@@ -37,6 +38,9 @@ import io.netty.handler.codec.http.*;
  * 若不在管道环境中，处理器无法发挥作用。</p>
  * <p>2. 调用 initChannel 方法时，传入的参数必须是 SocketChannel 类型的对象，
  * 否则可能会导致类型不匹配的异常，影响程序的正常运行。</p>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RegistryChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override

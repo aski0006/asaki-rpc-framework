@@ -35,6 +35,9 @@ import java.util.UUID;
  *     <li>如果不提供元数据，构造函数会使用一个空的 HashMap。</li>
  *     <li>该类不提供任何特殊的使用限制或潜在的副作用。</li>
  * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class ServiceInstance {
     private UUID instanceId = UUID.randomUUID();

@@ -28,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>使用限制与潜在副作用：</p>
  * <p>1. 该类必须在多线程环境中使用时，能够保证线程安全。</p>
  * <p>2. 传入的服务实例列表必须非空，否则会抛出异常。</p>
+ * @Author 郑钦 (Asaki0019)
+ * @Date 2025/4/8
  */
 public class RoundRobinLoadBalancer implements LoadBalancer {
 

@@ -11,6 +11,8 @@ import java.util.Properties;
  *     <li>registry.address: 注册中心地址，默认为 localhost:2181</li>
  *     <li>load.balance.strategy: 负载均衡策略，默认为 roundRobin</li>
  * </ul>
+ * @Author 郑钦 (Asaki0019)
+ * @Date 2025/4/8
  */
 public class ClientConfig {
     private static final Properties props = new Properties();

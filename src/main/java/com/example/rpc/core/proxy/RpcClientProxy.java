@@ -8,8 +8,17 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
- * RpcClientProxy 是一个动态代理类，用于实现 RPC 调用。
- * 它通过拦截目标方法调用，将方法信息封装为 RpcRequest 并发送给 RpcClient。
+ * <p>RpcClientProxy 是一个动态代理类，用于实现 RPC 调用。</p>
+ * <p>它通过拦截目标方法调用，将方法信息封装为 RpcRequest 并发送给 RpcClient。</p>
+ * <p>主要功能包括：</p>
+ * <ul>
+ *     <li><strong>拦截方法调用</strong>: 拦截目标方法调用，并将其封装为 RpcRequest。</li>
+ *     <li><strong>发送 RPC 请求</strong>: 将封装好的 RpcRequest 发送给 RpcClient。</li>
+ *     <li><strong>处理 Object 方法</strong>: 处理 Object 类中的方法调用，如 equals、hashCode 和 toString。</li>
+ * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RpcClientProxy implements InvocationHandler {
     private final RpcClient rpcClient;

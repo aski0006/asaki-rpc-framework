@@ -8,6 +8,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+/**
+ * <p>Netty 服务器类</p>
+ * <p>该类负责启动和管理基于 Netty 的 RPC 服务器。</p>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
+ */
 public class NettyServer {
     private final int port;
 

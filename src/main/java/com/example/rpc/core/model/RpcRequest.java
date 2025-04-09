@@ -3,17 +3,21 @@ package com.example.rpc.core.model;
 import java.io.Serializable;
 import java.util.UUID;
 
-
 /**
- * RpcRequest 是一个用于封装 RPC 请求的模型类。
- * 它实现了 Serializable 接口以支持序列化传输。
+ * <p>RpcRequest 是一个用于封装 RPC 请求的模型类。</p>
+ * <p>它实现了 Serializable 接口以支持序列化传输。</p>
  * 
- * 字段说明：
- * <p> - requestId: 唯一标识一个 RPC 请求的 UUID。</p>
- * <p> - serviceName: 目标服务的名称。</p>
- * <p> - methodName: 调用的目标方法名称。</p>
- * <p> - parameterTypes: 方法参数的类型数组。</p>
- * <p> - parameters: 方法参数的值数组。</p>
+ * <p>字段说明：</p>
+ * <ul>
+ *     <li><strong>requestId</strong>: 唯一标识一个 RPC 请求的 UUID。</li>
+ *     <li><strong>serviceName</strong>: 目标服务的名称。</li>
+ *     <li><strong>methodName</strong>: 调用的目标方法名称。</li>
+ *     <li><strong>parameterTypes</strong>: 方法参数的类型数组。</li>
+ *     <li><strong>parameters</strong>: 方法参数的值数组。</li>
+ * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RpcRequest implements Serializable {
     private UUID requestId;

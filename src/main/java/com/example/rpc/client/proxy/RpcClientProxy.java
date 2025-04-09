@@ -15,6 +15,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.example.rpc.client.handler.ClientResponseHandler.pendingRequests;
+
 /**
  * <p>RpcClientProxy 类的主要作用是作为 RPC 客户端的代理，用于调用远程服务。</p>
  * <p>该类实现了 {@link InvocationHandler} 接口，并通过动态代理机制来拦截方法调用，从而实现远程方法调用。</p>
@@ -42,11 +44,14 @@ import java.util.concurrent.CompletableFuture;
  * <p>使用限制与潜在副作用：</p>
  * <p>1. 该类必须在动态代理环境中使用才能生效。因为其核心功能是拦截方法调用，若不在代理环境中，方法调用将不会被拦截。</p>
  * <p>2. 传入的服务接口必须有效，否则可能会导致异常。</p>
+ *
+ * @Author 郑钦 (Asaki0019)
+ * @Date 2025/4/8
  */
 public class RpcClientProxy implements InvocationHandler {
     private final ServiceDiscovery discovery = new HttpServiceDiscovery();
     private final LoadBalancer loadBalancer = new RandomLoadBalancer();
-    private final NettyRpcClient client = new NettyRpcClient();
+    private static final NettyRpcClient client = new NettyRpcClient();
     private final Class<?> serviceInterface;
 
     public RpcClientProxy(Class<?> serviceInterface) {
@@ -74,6 +79,7 @@ public class RpcClientProxy implements InvocationHandler {
 
         CompletableFuture<RpcResponse> future = client.sendRequest(request,
                 instance.getHost(), instance.getPort());
+        pendingRequests.put(request.getRequestId().toString(), future);
         System.out.println("Sent request to: " + instance.getHost() + ":" + instance.getPort());
         RpcResponse response = future.get();
         if (response.getException() != null) {
@@ -82,5 +88,9 @@ public class RpcClientProxy implements InvocationHandler {
         }
         System.out.println("Received response: " + response.getResult());
         return response.getResult();
+    }
+
+    public static void shutdown() {
+        client.shutdown();
     }
 }

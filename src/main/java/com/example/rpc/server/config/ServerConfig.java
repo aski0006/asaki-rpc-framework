@@ -1,8 +1,20 @@
+
 package com.example.rpc.server.config;
 
 import java.io.InputStream;
 import java.util.Properties;
-
+/**
+ * <p>ServerConfig 是 RPC 服务器的配置类。</p>
+ * <p>该类负责加载和管理服务器的配置信息，包括端口号、注册中心地址、导出包路径等。</p>
+ * <p>主要功能包括：</p>
+ * <ul>
+ *     <li><strong>加载配置文件</strong>: 从 `server.properties` 文件中加载配置信息，如果加载失败则使用默认配置。</li>
+ *     <li><strong>提供配置获取方法</strong>: 提供了一系列静态方法，用于获取服务器端口号、注册中心地址、导出包路径等配置信息。</li>
+ * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
+ */
 public class ServerConfig {
     // 定义一个Properties对象，用于存储配置信息
     private static final Properties props = new Properties();
@@ -49,7 +61,6 @@ public class ServerConfig {
     public static long getHeartbeatInterval() {
         return Long.parseLong(props.getProperty("heartbeat.interval"));
     }
-
     // 获取轮询间隔
     public static long getPollInterval() {
         return Long.parseLong(props.getProperty("poll.interval"));

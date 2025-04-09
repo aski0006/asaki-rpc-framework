@@ -4,6 +4,7 @@ import com.example.rpc.registry.model.ServiceInstance;
 import com.example.rpc.registry.service.MemoryRegistryService;
 import com.example.rpc.registry.service.RegistryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFutureListener;
@@ -13,18 +14,36 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import static io.netty.buffer.Unpooled.*;
 
 /**
- * RegistryRequestHandler 是一个处理注册和发现服务请求的 Netty 处理器。
- * 它继承自 SimpleChannelInboundHandler 并专门处理 FullHttpRequest 类型的消息。
- * 主要功能包括：
- * <p>- 处理服务注册请求 (/register)。</p>
- * <p>- 处理服务发现请求 (/discover)。</p>
- * <p>- 发送错误响应。</p>
+ * <p>RegistryRequestHandler 是一个处理注册和发现服务请求的 Netty 处理器。</p>
+ * <p>它继承自 SimpleChannelInboundHandler 并专门处理 FullHttpRequest 类型的消息。</p>
+ * <p>主要功能包括：</p>
+ * <ul>
+ *     <li><strong>处理服务注册请求</strong>: 接收并处理服务实例的注册请求。</li>
+ *     <li><strong>处理服务发现请求</strong>: 根据服务名称返回所有可用的服务实例。</li>
+ *     <li><strong>处理心跳请求</strong>: 接收并更新服务实例的心跳时间戳。</li>
+ *     <li><strong>发送错误响应</strong>: 在处理请求过程中发生错误时，发送相应的错误响应。</li>
+ * </ul>
+ *
+ * <p>使用示例：</p>
+ * <pre>
+ * RegistryRequestHandler handler = new RegistryRequestHandler();
+ * </pre>
+ *
+ * <p>注意事项：</p>
+ * <ul>
+ *     <li>该类依赖于 Netty 框架，确保 Netty 环境已正确配置。</li>
+ *     <li>处理请求时，确保请求路径和 HTTP 方法正确。</li>
+ * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RegistryRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private final RegistryService registryService = new MemoryRegistryService();
@@ -52,7 +71,11 @@ public class RegistryRequestHandler extends SimpleChannelInboundHandler<FullHttp
                 System.out.println("Begin to discover service");
                 handleDiscover(ctx, path);
             // 如果请求不匹配以上两种情况，则返回 404 错误
-            } else {
+            } else if (path.startsWith("/heartbeat")) {  // 新增心跳处理入口
+                System.out.println("Begin to process heartbeat");
+                handleHeartbeat(ctx, request);
+            }
+            else {
                 System.out.println("Invalid request");
                 sendError(ctx, HttpResponseStatus.NOT_FOUND);
             }
@@ -126,19 +149,49 @@ public class RegistryRequestHandler extends SimpleChannelInboundHandler<FullHttp
      */
     private void handleDiscover(ChannelHandlerContext ctx, String path)
             throws Exception {
-        System.out.println("开始处理服务发现请求，路径：" + path);
+        System.out.println("To start processing a service discovery request, path: " + path);
         String serviceName = extractServiceName(path);
-        System.out.println("提取的服务名称：" + serviceName);
+        System.out.println("The name of the extracted service：" + serviceName);
         if (serviceName == null) {
-            System.out.println("服务名称为空，发送错误响应");
+            System.out.println("The service name is blank and an error response is sent");
             sendError(ctx, HttpResponseStatus.BAD_REQUEST);
             return;
         }
 
-        System.out.println("开始发现服务实例，服务名称：" + serviceName);
+        System.out.println("Start discovering the service instance, the service name：" + serviceName);
         List<ServiceInstance> instances = registryService.discoveryServiceInstance(serviceName);
-        System.out.println("发现的服务实例数量：" + instances.size());
+        System.out.println("The number of service instances discovered：" + instances.size());
         sendResponse(ctx, HttpResponseStatus.OK, toJson(instances));
+    }
+
+    // 新增心跳请求处理方法
+    private void handleHeartbeat(ChannelHandlerContext ctx, FullHttpRequest request) {
+        String json = null;
+        try {
+            // 解析心跳请求JSON
+            json = request.content().toString(CharsetUtil.UTF_8);
+            Map<String, String> payload = objectMapper.readValue(json, new TypeReference<Map<String, String>>() {
+            });
+
+            // 验证必要参数
+            String serviceName = payload.get("serviceName");
+            String instanceId = payload.get("instanceId");
+            if (serviceName == null || instanceId == null) {
+                sendError(ctx, HttpResponseStatus.BAD_REQUEST);
+                return;
+            }
+
+            // 更新心跳时间戳
+            registryService.heartbeat(serviceName, instanceId);
+            System.out.println("Heartbeat received => Service: " + serviceName
+                    + " InstanceID: " + instanceId
+                    + " Timestamp: " + System.currentTimeMillis());
+            sendResponse(ctx, HttpResponseStatus.OK, "{\"status\":\"heartbeat received\"}");
+            System.out.println("Heartbeat updated for: " + serviceName + "[" + instanceId + "]");
+        } catch (JsonProcessingException e) {
+            System.err.println("Invalid heartbeat format: " + json);
+            sendError(ctx, HttpResponseStatus.BAD_REQUEST);
+        }
     }
 
     /**

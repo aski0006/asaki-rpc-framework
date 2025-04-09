@@ -4,17 +4,22 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * RpcConfig 是一个用于加载 RPC 配置的工具类。
- * 它从类路径下的 rpc.properties 文件中读取配置信息。
- * 如果文件不存在，则使用默认配置：
+ * <p>RpcConfig 是一个用于加载 RPC 配置的工具类。</p>
+ * <p>它从类路径下的 rpc.properties 文件中读取配置信息。</p>
+ * <p>如果文件不存在，则使用默认配置：</p>
  * <ul>
  *   <li>rpc.server.host=localhost</li>
  *   <li>rpc.server.port=8080</li>
  * </ul>
  * 
- * 主要功能：
- * - 静态代码块：尝试加载 rpc.properties 文件，若失败则设置默认配置。
- * - getProperty 方法：根据键获取配置属性值。
+ * <p>主要功能：</p>
+ * <ul>
+ *   <li><strong>静态代码块</strong>: 尝试加载 rpc.properties 文件，若失败则设置默认配置。</li>
+ *   <li><strong>getProperty 方法</strong>: 根据键获取配置属性值。</li>
+ * </ul>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RpcConfig {
     private static final Properties props = new Properties();

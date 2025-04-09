@@ -21,6 +21,8 @@ import io.netty.handler.codec.LengthFieldPrepender;
  *      <li> {@link JacksonSerializer.Encoder}：用于编码出站数据，将对象转换为字节数组。</li>
  *      <li> {@link ClientResponseHandler}：用于处理 RPC 响应，并调用对应的 Future 对象。</li>
  *  </ul>
+ * @Author 郑钦 (Asaki0019)
+ * @Date 2025/4/8
  */
 public class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override

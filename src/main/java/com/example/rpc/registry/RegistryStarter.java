@@ -4,8 +4,11 @@ import com.example.rpc.registry.config.RegistryConfig;
 import com.example.rpc.registry.server.RegistryServer;
 
 /**
- *  @Author: Asaki0019
- *  @Description: 注册中心启动器
+ * <p>注册中心启动器</p>
+ * <p>该类负责启动注册中心服务，提供两种启动方式：指定端口启动和使用配置启动。</p>
+ *
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RegistryStarter {
     public static void start(int port) {

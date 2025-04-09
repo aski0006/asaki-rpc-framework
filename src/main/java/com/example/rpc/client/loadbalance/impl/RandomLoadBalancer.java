@@ -24,6 +24,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>- 如果服务实例列表为空，select 方法将抛出 IllegalStateException。</p>
  * <p>潜在副作用：</p>
  * <p>- 由于是随机选择，可能会导致某些服务实例被频繁选择，而其他实例较少被选择。</p>
+ * @Author 郑钦 (Asaki0019)
+ * @Date 2025/4/8
  */
 public class RandomLoadBalancer implements LoadBalancer {
 

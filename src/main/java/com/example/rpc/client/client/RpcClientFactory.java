@@ -20,6 +20,8 @@ import java.lang.reflect.Proxy;
  * <p>注意事项：</p>
  * <p>- 该类使用 Java 动态代理机制，因此要求接口类必须被正确加载</p>
  * <p>- 使用该类创建的代理对象，其行为将根据 RpcClientProxy 类的实现而变化</p>
+ * @author 郑钦 (Asaki0019)
+ * @date 2025/4/8
  */
 public class RpcClientFactory {
     @SuppressWarnings("unchecked")
