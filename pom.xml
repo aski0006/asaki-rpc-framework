@@ -64,7 +64,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <!--
         <build>
             <plugins>
                 <plugin>
@@ -83,67 +82,4 @@
                 </plugin>
             </plugins>
         </build>
-        -->
-
-    <build>
-        <plugins>
-
-            <!-- 修改编译器版本 -->
-            <plugin>
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>14</source>  <!-- 与 properties 一致 -->
-                    <target>14</target>
-                </configuration>
-            </plugin>
-
-            <!-- 打包包含依赖的fat jar -->
-            <plugin>
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.example.rpc.launcher.MainLauncher</mainClass>
-                                </transformer>
-                            </transformers>
-                            <filters>
-                                <!-- 排除所有 Netty 本地传输库 -->
-                                <filter>
-                                    <artifact>io.netty:netty-transport-native-*</artifact>
-                                    <excludes>
-                                        <exclude>**</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>io.netty:netty-resolver-dns-native-macos</artifact>
-                                    <excludes>
-                                        <exclude>**</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>io.netty:netty-transport-classes-*</artifact>
-                                    <excludes>
-                                        <exclude>**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
