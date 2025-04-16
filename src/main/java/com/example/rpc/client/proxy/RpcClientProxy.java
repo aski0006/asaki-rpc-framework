@@ -9,11 +9,16 @@ import com.example.rpc.client.loadbalance.impl.RandomLoadBalancer;
 import com.example.rpc.core.model.RpcRequest;
 import com.example.rpc.core.model.RpcResponse;
 import com.example.rpc.registry.model.ServiceInstance;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.rpc.client.handler.ClientResponseHandler.pendingRequests;
 
@@ -52,42 +57,65 @@ public class RpcClientProxy implements InvocationHandler {
     private final ServiceDiscovery discovery = new HttpServiceDiscovery();
     private final LoadBalancer loadBalancer = new RandomLoadBalancer();
     private static final NettyRpcClient client = new NettyRpcClient();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final Class<?> serviceInterface;
-
     public RpcClientProxy(Class<?> serviceInterface) {
         this.serviceInterface = serviceInterface;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("Starting RPC invocation");
-        List<ServiceInstance> instances = discovery.discover(serviceInterface.getName());
-        System.out.println("Discovered service instances: " + instances);
-        ServiceInstance instance = loadBalancer.select(instances);
-        if (instance == null) {
-            System.out.println("Service instance not found");
-            return null;
+        // 1. 参数校验
+        if (!serviceInterface.isInterface()) {
+            throw new IllegalArgumentException("serviceInterface must be an interface");
         }
-        System.out.println("Selected service instance: " + instance);
-        RpcRequest request = new RpcRequest(
-                java.util.UUID.randomUUID(),
+
+        // 2. 服务发现
+        List<ServiceInstance> instances = discovery.discover(serviceInterface.getName());
+        if (instances == null || instances.isEmpty()) {
+            throw new IllegalStateException("No available instances for service: " + serviceInterface.getName());
+        }
+
+        // 3. 负载均衡选择实例
+        ServiceInstance instance = loadBalancer.select(instances);
+        System.out.println("Selected instance: " + instance);
+
+        // 4. 构建请求
+        RpcRequest request = buildRpcRequest(method, args);
+
+        // 5. 发送请求并处理响应
+        try {
+            CompletableFuture<RpcResponse> future = client.sendRequest(request, instance.getHost(), instance.getPort());
+            pendingRequests.put(request.getRequestId().toString(), future);
+
+            // 添加超时控制（例如5秒）
+            RpcResponse response = future.get(5, TimeUnit.SECONDS);
+
+            if (response.getException() != null) {
+                Throwable ex = response.getException();
+                System.out.println("RPC request has exception: " + ex.getMessage());
+                throw ex;
+            }
+            JavaType returnType = OBJECT_MAPPER.getTypeFactory().constructType(method.getGenericReturnType());
+            return OBJECT_MAPPER.convertValue(response.getResult(), returnType);
+        } catch (TimeoutException e) {
+            System.out.println("RPC request timeout");
+            throw new RuntimeException("RPC timeout after 5 seconds", e);
+        } finally {
+            // 清理pending请求
+            pendingRequests.remove(request.getRequestId().toString());
+        }
+    }
+
+    // 辅助方法：构建RPC请求
+    private RpcRequest buildRpcRequest(Method method, Object[] args) {
+        return new RpcRequest(
+                UUID.randomUUID(),
                 serviceInterface.getName(),
                 method.getName(),
                 method.getParameterTypes(),
                 args
         );
-
-        CompletableFuture<RpcResponse> future = client.sendRequest(request,
-                instance.getHost(), instance.getPort());
-        pendingRequests.put(request.getRequestId().toString(), future);
-        System.out.println("Sent request to: " + instance.getHost() + ":" + instance.getPort());
-        RpcResponse response = future.get();
-        if (response.getException() != null) {
-            System.out.println("Received exception from service: " + response.getException());
-            throw response.getException();
-        }
-        System.out.println("Received response: " + response.getResult());
-        return response.getResult();
     }
 
     public static void shutdown() {

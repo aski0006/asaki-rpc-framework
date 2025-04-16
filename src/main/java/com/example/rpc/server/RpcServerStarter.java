@@ -4,6 +4,7 @@ package com.example.rpc.server;
 import com.example.rpc.server.config.ServerConfig;
 import com.example.rpc.server.server.NettyServer;
 import com.example.rpc.server.server.ServiceRegistry;
+import io.netty.channel.ChannelFuture;
 
 /**
  * <p>RPC 服务器启动类</p>
@@ -29,7 +30,9 @@ public class RpcServerStarter {
             System.out.println("Server shutdown gracefully");
         }));
         // 启动 Netty 服务器
-        new NettyServer(ServerConfig.getPort()).start();
+        NettyServer server = new NettyServer(ServerConfig.getPort());
+        ChannelFuture future = server.start();
+        future.channel().closeFuture().sync(); // 阻塞主线程
     }
 
     public static void main(String[] args) throws Exception {

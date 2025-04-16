@@ -1,6 +1,10 @@
 
 package com.example.rpc.server.config;
 
+import com.example.rpc.registry.config.RegistryConfig;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 /**
@@ -21,9 +25,19 @@ public class ServerConfig {
 
     // 静态代码块，用于加载配置文件
     static {
-        try (InputStream input = ServerConfig.class.getResourceAsStream("/server.properties")) {
-            // 从配置文件中加载配置信息
-            props.load(input);
+        try {
+            // 优先级 1: 从外部目录加载（例如 JAR 同级目录下的 config 文件夹）
+            File externalConfig = new File("./config/server.properties");
+            if (externalConfig.exists()) {
+                try (InputStream input = new FileInputStream(externalConfig)) {
+                    props.load(input);
+                }
+            } else {
+                // 优先级 2: 从 JAR 内部加载
+                try (InputStream input = RegistryConfig.class.getResourceAsStream("/server.properties")) {
+                    props.load(input);
+                }
+            }
         } catch (Exception e) {
             // 如果加载配置文件失败，则使用默认配置
             props.setProperty("export.packages.path", "com.example.rpc.server.function.impl");

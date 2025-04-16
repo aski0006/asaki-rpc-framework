@@ -69,11 +69,16 @@ public class RpcClientProxy implements InvocationHandler {
      */
     private Object handleObjectMethod(Object proxy, Method method, Object[] args) {
         String methodName = method.getName();
-        return switch (methodName) {
-            case "equals" -> proxy == args[0]; // 简化实现，实际可能需要更精确比较
-            case "hashCode" -> System.identityHashCode(proxy);
-            case "toString" -> "RPC Proxy for " + serviceName;
-            default -> throw new UnsupportedOperationException("Method not supported: " + method);
-        };
+        switch (methodName) {
+            case "equals":
+                return proxy == args[0]; // 简化实现，实际可能需要更精确比较
+            case "hashCode":
+                return System.identityHashCode(proxy);
+            case "toString":
+                return "RPC Proxy for " + serviceName;
+            default:
+                throw new UnsupportedOperationException("Method not supported: " + method);
+        }
     }
+
 }

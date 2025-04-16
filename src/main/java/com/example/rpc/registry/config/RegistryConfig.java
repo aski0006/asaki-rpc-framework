@@ -1,5 +1,7 @@
 package com.example.rpc.registry.config;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -26,9 +28,21 @@ public class RegistryConfig {
     private static final Properties props = new Properties();
 
     static {
-        try (InputStream input = RegistryConfig.class.getResourceAsStream("/registry.properties")) {
-            props.load(input);
+        try {
+            // 优先级 1: 从外部目录加载（例如 JAR 同级目录下的 config 文件夹）
+            File externalConfig = new File("./config/registry.properties");
+            if (externalConfig.exists()) {
+                try (InputStream input = new FileInputStream(externalConfig)) {
+                    props.load(input);
+                }
+            } else {
+                // 优先级 2: 从 JAR 内部加载
+                try (InputStream input = RegistryConfig.class.getResourceAsStream("/registry.properties")) {
+                    props.load(input);
+                }
+            }
         } catch (Exception e) {
+            // 优先级 3: 使用默认配置
             props.setProperty("registry.port", "2181");
             props.setProperty("heartbeat.interval", "3000");
         }

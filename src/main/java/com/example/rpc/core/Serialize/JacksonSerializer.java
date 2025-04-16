@@ -110,17 +110,19 @@ public class JacksonSerializer {
             msg.readBytes(bytes);
 
             if (targetClass == RpcRequest.class) {
-                // 反序列化 RpcRequest
                 RpcRequest request = mapper.readValue(bytes, RpcRequest.class);
 
-                // 根据 parameterTypes 转换参数类型
                 if (request.getParameterTypes() != null && request.getParameters() != null) {
-                    for (int i = 0; i < request.getParameters().length; i++) {
-                        Class<?> targetType = request.getParameterTypes()[i];
-                        Object param = request.getParameters()[i];
-                        // 使用 ObjectMapper 转换类型
-                        Object convertedParam = mapper.convertValue(param, targetType);
-                        request.getParameters()[i] = convertedParam;
+                    Object[] parameters = request.getParameters();
+                    Class<?>[] parameterTypes = request.getParameterTypes();
+
+                    for (int i = 0; i < parameters.length; i++) {
+                        Object param = parameters[i];
+                        Class<?> targetType = parameterTypes[i];
+
+                        // 将参数序列化为 JSON 字节，再反序列化为目标类型
+                        byte[] paramBytes = mapper.writeValueAsBytes(param);
+                        parameters[i] = mapper.readValue(paramBytes, targetType);
                     }
                 }
 

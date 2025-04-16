@@ -17,14 +17,14 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  */
 public class NettyServer {
     private final int port;
-
+    EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    EventLoopGroup workerGroup = new NioEventLoopGroup();
     public NettyServer(int port) {
         this.port = port;
     }
 
-    public void start() throws InterruptedException {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+    public ChannelFuture start() throws InterruptedException {
+
 
         try {
             ServerBootstrap bootstrap = new ServerBootstrap()
@@ -36,10 +36,15 @@ public class NettyServer {
 
             ChannelFuture future = bootstrap.bind(port).sync();
             System.out.println("RPC Server started on port: " + port);
-            future.channel().closeFuture().sync();
-        } finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
+            return future; // 返回 ChannelFuture
+        } catch (InterruptedException e) {
+            throw e;
         }
     }
+    public void shutdown() {
+        if (workerGroup != null) workerGroup.shutdownGracefully();
+        if (bossGroup != null) bossGroup.shutdownGracefully();
+        System.out.println("Registry server stopped");
+    }
+
 }

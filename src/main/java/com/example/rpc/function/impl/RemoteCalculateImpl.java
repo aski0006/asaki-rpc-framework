@@ -1,7 +1,7 @@
-package com.example.rpc.server.function.impl;
+package com.example.rpc.function.impl;
 
 import com.example.rpc.server.annotation.RpcService;
-import com.example.rpc.server.function.interfaces.RemoteCalculate;
+import com.example.rpc.function.interfaces.RemoteCalculate;
 
 @RpcService(interfaceClass = RemoteCalculate.class)
 public class RemoteCalculateImpl implements RemoteCalculate {

@@ -32,7 +32,7 @@ public class HttpServiceDiscovery implements ServiceDiscovery {
             HttpGet request = new HttpGet(registryUrl);
             return client.execute(request, response ->
                     mapper.readValue(response.getEntity().getContent(),
-                            new TypeReference<>() {
+                            new TypeReference<List<ServiceInstance>>() {
                             }));
         } catch (Exception e) {
             throw new RuntimeException("Service discovery failed", e);

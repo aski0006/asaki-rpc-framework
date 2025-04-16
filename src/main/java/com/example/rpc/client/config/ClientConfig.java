@@ -1,5 +1,9 @@
 package com.example.rpc.client.config;
 
+import com.example.rpc.registry.config.RegistryConfig;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -18,9 +22,20 @@ public class ClientConfig {
     private static final Properties props = new Properties();
 
     static {
-        try (InputStream input = ClientConfig.class.getResourceAsStream("/client.properties")) {
-            props.load(input);
-        } catch (Exception e) {
+        try {
+            // 优先级 1: 从外部目录加载（例如 JAR 同级目录下的 config 文件夹）
+            File externalConfig = new File("./config/client.properties");
+            if (externalConfig.exists()) {
+                try (InputStream input = new FileInputStream(externalConfig)) {
+                    props.load(input);
+                }
+            } else {
+                // 优先级 2: 从 JAR 内部加载
+                try (InputStream input = RegistryConfig.class.getResourceAsStream("/client.properties")) {
+                    props.load(input);
+                }
+            }
+        }catch (Exception e) {
             System.out.println(e.getMessage());
             props.setProperty("registry.address", "localhost:2181");
             props.setProperty("request.timeout", "5000");
