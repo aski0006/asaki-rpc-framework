@@ -3,6 +3,8 @@ package com.example.rpc.registry.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -29,20 +31,38 @@ public class RegistryConfig {
 
     static {
         try {
-            // 优先级 1: 从外部目录加载（例如 JAR 同级目录下的 config 文件夹）
-            File externalConfig = new File("./config/registry.properties");
+            // 动态获取JAR所在目录路径
+            String jarPath = RegistryConfig.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8); // 处理特殊字符和空格
+            File jarFile = new File(jarPath);
+            String jarDir = jarFile.getParent();
+
+            // 优先级1: 从JAR同级config目录加载
+            File externalConfig = new File(jarDir + File.separator + "config" + File.separator + "registry.properties");
+            System.out.println("尝试加载外部配置: " + externalConfig.getAbsolutePath());
+
             if (externalConfig.exists()) {
                 try (InputStream input = new FileInputStream(externalConfig)) {
                     props.load(input);
+                    System.out.println("成功加载外部配置文件");
                 }
             } else {
-                // 优先级 2: 从 JAR 内部加载
+                // 优先级2: 从JAR内部加载
+                System.out.println("外部配置不存在，尝试JAR内部...");
                 try (InputStream input = RegistryConfig.class.getResourceAsStream("/registry.properties")) {
-                    props.load(input);
+                    if (input != null) {
+                        props.load(input);
+                        System.out.println("成功加载JAR内部配置");
+                    } else {
+                        // 优先级3: 使用默认配置
+                        System.out.println("JAR内部未找到配置，使用默认值");
+                        props.setProperty("registry.port", "2181");
+                        props.setProperty("heartbeat.interval", "3000");
+                    }
                 }
             }
         } catch (Exception e) {
-            // 优先级 3: 使用默认配置
+            System.err.println("配置加载异常: " + e.getMessage());
             props.setProperty("registry.port", "2181");
             props.setProperty("heartbeat.interval", "3000");
         }

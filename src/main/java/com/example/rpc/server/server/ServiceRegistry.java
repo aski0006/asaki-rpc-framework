@@ -3,7 +3,7 @@ package com.example.rpc.server.server;
 import com.example.rpc.registry.model.ServiceInstance;
 import com.example.rpc.server.annotation.RpcService;
 import com.example.rpc.server.config.ServerConfig;
-import com.example.rpc.server.core.ClassScanner;
+import com.example.rpc.core.ClassScanner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;

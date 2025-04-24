@@ -5,6 +5,7 @@ import com.example.rpc.registry.config.RegistryConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 /**
@@ -26,22 +27,33 @@ public class ServerConfig {
     // 静态代码块，用于加载配置文件
     static {
         try {
-            // 优先级 1: 从外部目录加载（例如 JAR 同级目录下的 config 文件夹）
-            File externalConfig = new File("./config/server.properties");
+            // 优先级 1: 从JAR所在目录的config文件夹加载
+            String jarPath = ServerConfig.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            File jarFile = new File(jarPath);
+            String jarDir = jarFile.getParent(); // 获取JAR所在目录
+            File externalConfig = new File(jarDir + File.separator + "config" + File.separator + "server.properties");
+            System.out.println("尝试加载外部配置文件: " + externalConfig.getAbsolutePath());
+
             if (externalConfig.exists()) {
                 try (InputStream input = new FileInputStream(externalConfig)) {
                     props.load(input);
+                    System.out.println("成功加载外部配置文件");
                 }
             } else {
-                // 优先级 2: 从 JAR 内部加载
-                try (InputStream input = RegistryConfig.class.getResourceAsStream("/server.properties")) {
-                    props.load(input);
+                // 优先级 2: 从JAR内部加载
+                System.out.println("外部配置文件不存在，尝试从JAR内部加载...");
+                try (InputStream input = ServerConfig.class.getResourceAsStream("/server.properties")) {
+                    if (input != null) {
+                        props.load(input);
+                        System.out.println("成功加载JAR内部配置文件");
+                    } else {
+                        throw new IOException("JAR内部未找到server.properties");
+                    }
                 }
             }
         } catch (Exception e) {
-            // 如果加载配置文件失败，则使用默认配置
+            System.err.println("配置文件加载失败，使用默认配置: " + e.getMessage());
             props.setProperty("export.packages.path", "com.example.rpc.server.function.impl");
-
             props.setProperty("server.host", "localhost");
             props.setProperty("poll.interval", "5000");
             props.setProperty("heartbeat.interval", "30000");

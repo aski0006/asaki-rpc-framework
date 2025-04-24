@@ -1,7 +1,7 @@
 package com.example.rpc.function.impl;
 
-import com.example.rpc.server.annotation.RpcService;
 import com.example.rpc.function.interfaces.UserService;
+import com.example.rpc.server.annotation.RpcService;
 
 @RpcService(interfaceClass = UserService.class)
 public class UserServiceImpl implements UserService {

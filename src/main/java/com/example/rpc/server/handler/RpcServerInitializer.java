@@ -1,4 +1,4 @@
-package com.example.rpc.server.core.handler;
+package com.example.rpc.server.handler;
 
 import com.example.rpc.core.Serialize.JacksonSerializer;
 import com.example.rpc.core.model.RpcRequest;

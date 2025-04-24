@@ -1,6 +1,6 @@
 package com.example.rpc.server.server;
 
-import com.example.rpc.server.core.handler.RpcServerInitializer;
+import com.example.rpc.server.handler.RpcServerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;

@@ -1,4 +1,4 @@
-package com.example.rpc.registry.model;
+package com.example.rpc.core.model;
 
 import java.util.HashMap;
 import java.util.Map;

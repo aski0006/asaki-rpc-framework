@@ -3,6 +3,7 @@ package com.example.rpc.function.tools;
 
 import com.example.rpc.function.model.Recruitment;
 import com.google.gson.Gson;
+
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
